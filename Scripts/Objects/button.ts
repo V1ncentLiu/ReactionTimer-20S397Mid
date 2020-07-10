@@ -2,8 +2,8 @@ module objects{
     export class Button extends createjs.Bitmap{
         //var
         //constr
-        constructor(imagePath:string, x:number = 0, y:number = 0){
-            super(imagePath);
+        constructor(assetmanager:createjs.LoadQueue, imageString:string, x:number = 0, y:number = 0){
+            super(assetmanager.getResult(imageString));
             this.x = x;
             this.y = y;
             this.on("mouseover", this.mouseOver);
