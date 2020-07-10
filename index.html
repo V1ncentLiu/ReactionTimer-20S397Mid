@@ -5,13 +5,15 @@
         <meta name="viweport" content="width=device-width, initial-scale=1.0" />
         <title>Reaction timer</title>
         <!-- Script -->
-        <script src="https://code.createjs.com/1.0.0/easeljs.min.js"></script>
-        <script src="https://code.createjs.com/1.0.0/tweenjs.min.js"></script>
+        
         <!-- Style sheet -->
-        <link rel="stylesheet" href="/Contents/game.css" />
+        <link rel="stylesheet" href="./Contents/game.css" />
     </head>
-    <body onload="initialize()">
-        <canvas id="canvasStart" width="640" height="400"></canvas>
-        <script src="script.js"></script>
+    <body>
+        <canvas id="canvas" width="640" height="400"></canvas>
+        <!-- Dependencies -->
+        <script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
+        <!-- Game scripts-->
+        <script src="./Scripts/Core/game.js"></script>
     </body>
 </html>
