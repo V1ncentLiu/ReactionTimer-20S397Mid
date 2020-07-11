@@ -17,10 +17,10 @@ var objects;
         __extends(Button, _super);
         //var
         //constr
-        function Button(imagePath, x, y) {
+        function Button(assetmanager, imageString, x, y) {
             if (x === void 0) { x = 0; }
             if (y === void 0) { y = 0; }
-            var _this = _super.call(this, imagePath) || this;
+            var _this = _super.call(this, assetmanager.getResult(imageString)) || this;
             _this.x = x;
             _this.y = y;
             _this.on("mouseover", _this.mouseOver);
