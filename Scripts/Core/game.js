@@ -10,7 +10,8 @@
     assetManifest = [
         { id: "startBtn", src: "./Assets/game_start.png" },
         { id: "nextBtn", src: "./Assets/right.png" },
-        { id: "backBtn", src: "./Assets/left.png" }
+        { id: "backBtn", src: "./Assets/left.png" },
+        { id: "target", src: "./Assets/target.png" }
     ];
     function Init() {
         console.log("Initializing Start");
@@ -43,12 +44,22 @@
         //finite state
         switch (objects.game.currentScene) {
             case config.Scene.START:
+                stage.removeAllChildren();
+                currentScene = new scenes.StartScene(assetManager);
+                stage.addChild(currentScene);
                 break;
             case config.Scene.GAME:
+                stage.removeAllChildren();
+                currentScene = new scenes.PlayScene(assetManager);
+                stage.addChild(currentScene);
                 break;
             case config.Scene.OVER:
+                stage.removeAllChildren();
+                currentScene = new scenes.GameOverScene(assetManager);
+                stage.addChild(currentScene);
                 break;
         }
+        currentState = objects.game.currentScene;
     }
     window.onload = Init;
 })();

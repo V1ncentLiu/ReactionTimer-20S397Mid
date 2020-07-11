@@ -34,7 +34,9 @@ var scenes;
             this.addChild(this.startButton);
             this.startButton.on("click", this.startButtonClick);
         };
-        StartScene.prototype.startButtonClick = function () { };
+        StartScene.prototype.startButtonClick = function () {
+            objects.game.currentScene = config.Scene.GAME;
+        };
         return StartScene;
     }(objects.Scene));
     scenes.StartScene = StartScene;

@@ -12,7 +12,8 @@
     assetManifest = [
         {id:"startBtn", src:"./Assets/game_start.png"},
         {id:"nextBtn", src:"./Assets/right.png"},
-        {id:"backBtn", src:"./Assets/left.png"}
+        {id:"backBtn", src:"./Assets/left.png"},
+        {id:"target", src:"./Assets/target.png"}
     ];
     
     function Init(){

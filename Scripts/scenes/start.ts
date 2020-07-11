@@ -7,7 +7,8 @@ module scenes{
         //constr
         constructor(assetManager:createjs.LoadQueue){
             super(assetManager);
-            this.Start();        }
+            this.Start();        
+        }
         //mthod
         public Start():void{
             //init objs in scnen
