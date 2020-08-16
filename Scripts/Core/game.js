@@ -1,66 +1,85 @@
-(function () {
-    //Globals
-    var canvas = document.getElementById("canvas");
-    var stage;
-    var assetManager;
-    var assetManifest;
-    //Current Scene
-    var currentScene;
-    var currentState;
-    assetManifest = [
-        { id: "startBtn", src: "./Assets/game_start.png" },
-        { id: "nextBtn", src: "./Assets/right.png" },
-        { id: "backBtn", src: "./Assets/left.png" },
-        { id: "target", src: "./Assets/target.png" }
-    ];
-    function Init() {
-        console.log("Initializing Start");
-        assetManager = new createjs.LoadQueue;
-        assetManager.installPlugin(createjs.Sound);
-        assetManager.loadManifest(assetManifest);
-        assetManifest.concat("complete", Start, this);
+import { ClockTick, Timer, Directions } from '../types/index.js';
+import { Coin, Snake, SlowPlayer, FastPlayer } from '../objects/index.js';
+import { Board, Canvas, Console, Controls, GUI } from '../ui/index.js';
+var Difficulty;
+(function (Difficulty) {
+    Difficulty[Difficulty["EZY"] = 300] = "EZY";
+    Difficulty[Difficulty["MED"] = 150] = "MED";
+    Difficulty[Difficulty["DIF"] = 50] = "DIF";
+})(Difficulty || (Difficulty = {}));
+export class Game {
+    static init() {
+        Canvas.init(document.querySelector("canvas"));
+        let body = document.querySelector("body");
+        body.onkeyup = Controls.onKeyUp;
+        Game.ready();
     }
-    function Start() {
-        console.log("Starting...");
-        stage = new createjs.Stage(canvas);
-        stage.enableMouseOver(20);
-        createjs.Ticker.framerate = 60;
-        createjs.Ticker.on("tick", Update);
-        //set default state - state machine
-        objects.game.currentScene = config.Scene.START;
-        currentState = config.Scene.START;
-        Main();
+    static ready() {
+        Console.init();
+        Board.init();
+        Board.draw();
+        GUI.init();
+        GUI.draw();
+        Game.player = new Snake({ X: 0, Y: 0 });
+        Game.player.direction = Directions.RIGHT;
+        Game.clock = new Timer(Difficulty.DIF, 0, Game.onClockTick);
     }
-    function Update() {
-        if (currentState != objects.game.currentScene) {
-            console.log("scene: " + objects.game.currentScene);
-            Main();
+    static start() {
+        if (Game.isStart) {
+            return;
         }
-        currentScene.Update();
-        stage.update();
-    }
-    function Main() {
-        console.log("Game start");
-        //finite state
-        switch (objects.game.currentScene) {
-            case config.Scene.START:
-                stage.removeAllChildren();
-                currentScene = new scenes.StartScene(assetManager);
-                stage.addChild(currentScene);
-                break;
-            case config.Scene.GAME:
-                stage.removeAllChildren();
-                currentScene = new scenes.PlayScene(assetManager);
-                stage.addChild(currentScene);
-                break;
-            case config.Scene.OVER:
-                stage.removeAllChildren();
-                currentScene = new scenes.GameOverScene(assetManager);
-                stage.addChild(currentScene);
-                break;
+        if (Game.clock.isPause) {
+            return Game.pause();
         }
-        currentState = objects.game.currentScene;
+        Game.isStart = true;
+        Game.clock.start();
     }
-    window.onload = Init;
-})();
+    static pause() {
+        if (Game.clock.isPause) {
+            Game.isStart = true;
+            return Game.clock.resume();
+        }
+        Game.clock.pause();
+        Game.isStart = false;
+        GUI.draw();
+    }
+    static reset() {
+        Game.clock && Game.clock.stop();
+        Game.isStart = false;
+        Game.ready();
+    }
+    static onClockTick() {
+        Controls.processInput();
+        Game.player.process();
+        if (Game.clock.tick == ClockTick.EVEN) {
+            Game.coinCounter += 1;
+            if (Game.coinCounter >= 2) {
+                Game.coinCounter = 0;
+                if (!Math.floor(Math.random() + 0.5)) {
+                    var prob = (Coin.coinsActive + 0.5) / 5;
+                    if (!Math.floor(Math.random() * 0.8)) {
+                        var coin = Coin.rand();
+                        Board.randPlace(coin);
+                    }
+                    else {
+                        if (!Math.floor(Math.random() + .5)) {
+                            var slowPlayer = new SlowPlayer();
+                            Board.randPlace(slowPlayer);
+                        }
+                        else {
+                            var fastPlayer = new FastPlayer();
+                            Board.randPlace(fastPlayer);
+                        }
+                    }
+                }
+            }
+        }
+        Board.draw();
+        GUI.draw();
+    }
+}
+Game.hiSc = 0;
+Game.isStart = false;
+Game.coinCounter = 0;
+Game.init();
 //# sourceMappingURL=game.js.map
